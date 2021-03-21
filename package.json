@@ -1,0 +1,24 @@
+{
+	"name": "prsi-ipower",
+	"version": "1.0",
+	"api_version": "1.0",
+	"keywords": [
+		"Power",
+		"Control"
+	],
+	"manufacturer": "PRSI",
+	"product": [
+		"iPower PDU"
+	],
+	"shortname": "iPower",
+	"description": "Companion module for iPower PDU",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Peter Daniel",
+	"license": "MIT",
+	"dependencies": {
+		"net-snmp": "^3.5.2"
+	}
+}

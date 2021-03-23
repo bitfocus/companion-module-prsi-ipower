@@ -1,9 +1,9 @@
 exports.getPresets = function (instanceLabel) {
 
-	var presets = [];
+    var presets = [];
     var i;	
    
-    for(i = 1; i < 9; i ++ ) {
+    for (i = 1; i < 9; i ++ ) {
 		presets.push({		
 				category: 'Socket On',
 				label: 'Switch Output ' + String(i) + ' On',
@@ -23,7 +23,7 @@ exports.getPresets = function (instanceLabel) {
 			});
 		}
 		
-	for(i = 1; i < 9; i ++ ) {
+	for (i = 1; i < 9; i ++ ) {
 		presets.push({		
 				category: 'Socket Off',
 				label: 'Switch Output ' + String(i) + ' Off',
@@ -43,7 +43,7 @@ exports.getPresets = function (instanceLabel) {
 			});
 		}
 		
-	for(i = 1; i < 9; i ++ ) {
+	for (i = 1; i < 9; i ++ ) {
 		presets.push({
 			    category: 'Socket Latch On & Off',
 				label: 'Toggle Output ' + String(i),
@@ -70,5 +70,5 @@ exports.getPresets = function (instanceLabel) {
 			});
 		}	
 	
-	return(presets);
+	return (presets);
 };

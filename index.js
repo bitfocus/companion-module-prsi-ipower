@@ -103,7 +103,7 @@ instance.prototype.actions = function (system) {
 					min: 1,
 					max: 24,
 					default: 1,
-					required: true
+					required: true,
 				},
 			],
 		},
@@ -117,7 +117,7 @@ instance.prototype.actions = function (system) {
 					min: 1,
 					max: 24,
 					default: 1,
-					required: true
+					required: true,
 				},
 			],
 		},

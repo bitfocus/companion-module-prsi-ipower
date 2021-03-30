@@ -97,11 +97,13 @@ instance.prototype.actions = function (system) {
 			label: 'Set Output Socket On',
 			options: [
 				{
-					type: 'textinput',
+					type: 'number',
 					label: 'Socket',
 					id: 'socketOn',
-					regex: self.REGEX_NUMBER,
-					default: '1',
+					min: 1,
+					max: 24,
+					default: 1,
+					required: true
 				},
 			],
 		},
@@ -109,11 +111,13 @@ instance.prototype.actions = function (system) {
 			label: 'Set Output Socket Off',
 			options: [
 				{
-					type: 'textinput',
+					type: 'number',
 					label: 'Socket',
 					id: 'socketOff',
-					regex: self.REGEX_NUMBER,
-					default: '1',
+					min: 1,
+					max: 24,
+					default: 1,
+					required: true
 				},
 			],
 		},

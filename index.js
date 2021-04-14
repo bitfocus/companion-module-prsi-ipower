@@ -111,14 +111,14 @@ instance.prototype.destroy = function () {
 }
 
 instance.prototype.presets = function () {
-    var self = this
-    self.setPresetDefinitions(presets.getPresets(self.label))
+	var self = this
+	self.setPresetDefinitions(presets.getPresets(self.label))
 }
 
 instance.prototype.actions = function (system) {
 	var self = this
 
-    // TODO: Read output labels from device and create dropdown
+	// TODO: Read output labels from device and create dropdown
 	self.setActions({
 		switchOn: {
 			label: 'Set Output Socket On',
@@ -189,7 +189,7 @@ instance.prototype.action = function (action) {
 	]
 
 	// Create new session and send set command
-    var snmp_session = snmp.createSession(self.config.host, self.config.communityWrite, snmp_options)
+	var snmp_session = snmp.createSession(self.config.host, self.config.communityWrite, snmp_options)
 	snmp_session.set(varbinds, function (error, varbinds) {
 		if (error) {
 			// self.log('warn',error.toString ());
@@ -223,7 +223,6 @@ instance.prototype.getInfo = function (host,communityRead) {
 			for (var i = 0; i < varbinds.length; i++) {
 				// for version 1 we can assume all OIDs were successful
 				console.log (varbinds[i].oid + '|' + varbinds[i].value)
-				
 				// for version 2c we must check each OID for an error condition
 				if (snmp.isVarbindError (varbinds[i]))
 					console.error (snmp.varbindError (varbinds[i]))
@@ -231,7 +230,7 @@ instance.prototype.getInfo = function (host,communityRead) {
 					console.log (varbinds[i].oid + '|' + varbinds[i].value);
 					if (typeof varbinds[i].value === 'object' && varbinds[i].value !== null ) {
 						// self.log('info',self.ab2str(varbinds[i].value));
-						pdu_info.push(self.ab2str(varbinds[i].value));
+						pdu_info.push(self.ab2str(varbinds[i].value))
 					} else {
 						// self.log('info',varbinds[i].value);
 						pdu_info.push(varbinds[i].value)
@@ -250,7 +249,7 @@ instance.prototype.getInfo = function (host,communityRead) {
 }
 
 instance.prototype.ab2str = function (buf) {
-    return String.fromCharCode.apply(null, new Uint16Array(buf))
+	return String.fromCharCode.apply(null, new Uint16Array(buf))
 }
 
 instance_skel.extendedBy(instance)

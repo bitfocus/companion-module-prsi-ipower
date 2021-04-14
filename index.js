@@ -18,7 +18,11 @@ function instance(system, id, config) {
 instance.prototype.updateConfig = function (config) {
 	var self = this
 	self.config = config
-
+	self.setVariable('Firmware',null);
+	self.setVariable('NumberSockets',null);
+	self.setVariable('Model',null);
+	self.setVariable('SerialNumber',null);		
+	self.getInfo(self.config.host, self.config.communityRead);
 	self.actions()
 }
 
@@ -28,9 +32,28 @@ instance.prototype.init = function () {
 	debug = self.debug
 	log = self.log
 
+	self.setVariableDefinitions( [
+		{
+			label: 'iPower product code',
+			name: 'Model',
+		},
+		{
+			label: 'Serial number',
+			name: 'SerialNumber',
+		},
+		{
+			label: 'Firmware version',
+			name: 'Firmware',
+		},
+		{
+			label: 'Number of output sockets',
+			name: 'NumberSockets',
+		},
+	])
+	
 	self.status(self.STATE_OK)
 	self.presets()
-
+	self.getInfo(self.config.host, self.config.communityRead)
 	self.actions() // export actions
 }
 
@@ -80,18 +103,22 @@ instance.prototype.config_fields = function () {
 // When module gets deleted
 instance.prototype.destroy = function () {
 	var self = this
-
+	self.setVariable('Firmware',null);
+	self.setVariable('NumberSockets',null);
+	self.setVariable('Model',null);
+	self.setVariable('SerialNumber',null);	
 	debug('destroy', self.id)
 }
 
 instance.prototype.presets = function () {
-	var self = this
-	self.setPresetDefinitions(presets.getPresets(self.label))
+    var self = this
+    self.setPresetDefinitions(presets.getPresets(self.label))
 }
 
 instance.prototype.actions = function (system) {
 	var self = this
 
+    // TODO: Read output labels from device and create dropdown
 	self.setActions({
 		switchOn: {
 			label: 'Set Output Socket On',
@@ -162,7 +189,7 @@ instance.prototype.action = function (action) {
 	]
 
 	// Create new session and send set command
-	var snmp_session = snmp.createSession(self.config.host, self.config.communityWrite, snmp_options)
+    var snmp_session = snmp.createSession(self.config.host, self.config.communityWrite, snmp_options)
 	snmp_session.set(varbinds, function (error, varbinds) {
 		if (error) {
 			// self.log('warn',error.toString ());
@@ -178,6 +205,52 @@ instance.prototype.action = function (action) {
 		}
 		snmp_session.close()
 	})
+}
+
+instance.prototype.getInfo = function (host,communityRead) {
+
+	var self = this
+	var pdu_info = []
+	var get_session = snmp.createSession (host, communityRead)
+	
+	// firmware, number of sockets, model, serial number
+	var oids = ['1.3.6.1.4.1.38218.1.5.1.0','1.3.6.1.4.1.38218.1.5.2.0','1.3.6.1.4.1.38218.1.5.3.0','1.3.6.1.4.1.38218.1.5.4.0'];
+	
+	get_session.get (oids, function (error, varbinds) {
+		if (error) {
+			self.log('error',error.toString ())
+		} else {
+			for (var i = 0; i < varbinds.length; i++) {
+				// for version 1 we can assume all OIDs were successful
+				console.log (varbinds[i].oid + '|' + varbinds[i].value)
+				
+				// for version 2c we must check each OID for an error condition
+				if (snmp.isVarbindError (varbinds[i]))
+					console.error (snmp.varbindError (varbinds[i]))
+				else {
+					console.log (varbinds[i].oid + '|' + varbinds[i].value);
+					if (typeof varbinds[i].value === 'object' && varbinds[i].value !== null ) {
+						// self.log('info',self.ab2str(varbinds[i].value));
+						pdu_info.push(self.ab2str(varbinds[i].value));
+					} else {
+						// self.log('info',varbinds[i].value);
+						pdu_info.push(varbinds[i].value)
+					}
+				}
+			}
+		}
+
+		self.setVariable('Firmware',pdu_info[0])
+		self.setVariable('NumberSockets',pdu_info[1])
+		self.setVariable('Model',pdu_info[2])
+		self.setVariable('SerialNumber',pdu_info[3])	
+		get_session.close()
+	})
+	return
+}
+
+instance.prototype.ab2str = function (buf) {
+    return String.fromCharCode.apply(null, new Uint16Array(buf))
 }
 
 instance_skel.extendedBy(instance)

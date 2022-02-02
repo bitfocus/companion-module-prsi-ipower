@@ -20,5 +20,13 @@
 	"license": "MIT",
 	"dependencies": {
 		"net-snmp": "^3.5.2"
+	},
+	"homepage": "https://github.com/bitfocus/companion-module-prsi-ipower#readme",
+	"bugs": {
+		"url": "https://github.com/bitfocus/companion-module-prsi-ipower/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bitfocus/companion-module-prsi-ipower.git"
 	}
 }
